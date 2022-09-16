@@ -1,16 +1,16 @@
 # Book-Management
 
 # book-management
-# Key points
+## Key points
 
     Create a group database groupXDatabase. You can clean the db you previously used and resue that.
     This time each group should have a single git branch. Coordinate amongst yourselves by ensuring every next person pulls the code last pushed by a team mate. You branch will be checked as part of the demo. Branch name should follow the naming convention project/booksManagementGroupX
     Follow the naming conventions exactly as instructed.
 
-# Models
+### Models
 
-# User Model
-
+- User Model
+```
 { 
   title: {string, mandatory, enum[Mr, Mrs, Miss]},
   name: {string, mandatory},
@@ -25,9 +25,9 @@
   createdAt: {timestamp},
   updatedAt: {timestamp}
 }
-
-    Books Model
-
+```
+-  Books Model
+```
 { 
   title: {string, mandatory, unique},
   excerpt: {string, mandatory}, 
@@ -42,9 +42,9 @@
   createdAt: {timestamp},
   updatedAt: {timestamp},
 }
-
-    Review Model (Books review)
-
+```
+-    Review Model (Books review)
+```
 {
   bookId: {ObjectId, mandatory, refs to book model},
   reviewedBy: {string, mandatory, default 'Guest', value: reviewer's name},
@@ -52,22 +52,22 @@
   rating: {number, min 1, max 5, mandatory},
   review: {string, optional}
 }
+```
+# User APIs
+## POST /register
 
-User APIs
-POST /register
+-    Create a user - atleast 5 users
+-    Create a user document from request body.
+-    Return HTTP status 201 on a succesful user creation. Also return the user document. The response should be a JSON object like this
+-    Return HTTP status 400 if no params or invalid params received in request body. The response should be a JSON object like this
 
-    Create a user - atleast 5 users
-    Create a user document from request body.
-    Return HTTP status 201 on a succesful user creation. Also return the user document. The response should be a JSON object like this
-    Return HTTP status 400 if no params or invalid params received in request body. The response should be a JSON object like this
+## POST /login
 
-POST /login
+-    Allow an user to login with their email and password.
+-    On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like this
+-    If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON -     object like this
 
-    Allow an user to login with their email and password.
-    On a successful login attempt return a JWT token contatining the userId, exp, iat. The response should be a JSON object like this
-    If the credentials are incorrect return a suitable error message with a valid HTTP status code. The response should be a JSON object like this
-
-Books API
+## Books API
 POST /books
 
     Create a book document from request body. Get userId in request body only.

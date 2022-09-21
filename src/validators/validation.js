@@ -46,6 +46,11 @@ const isValidTitle=(data)=>
     return true  
 }
 
+const isValidISBN = (data)=>{
+    let ISBNregex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+    return ISBNregex.test(data.trim())
+}
+
 const isValidObjectId = (data)=>{
     return mongoose.Types.ObjectId.isValid(data)
 }
@@ -66,5 +71,6 @@ module.exports={
     isValidTitle,
     isLetters,
     isValidObjectId,
-    makeArray
+    makeArray,
+    isValidISBN
 }

@@ -17,6 +17,8 @@ const authenticationMid = async function(req,res,next){
             secreteKey,
             (err,result)=>{
                 if(err) return res.status(401).send({status:false, msg:err.message})
+                console.log(result)
+                req.headers.userId=result.userId
                 req.decodedToken=result
                 next()
             }

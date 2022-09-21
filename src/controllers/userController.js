@@ -19,7 +19,7 @@ const createUser = async function(req,res){
             return
         }
 
-        //Validation on mandatory fields
+        //Check for mandatory fields
         let arrOfMandField = ["title","name","phone","email","password"]
         for(let key of arrOfMandField){
             if(!Object.keys(data).includes(key)){
@@ -28,7 +28,7 @@ const createUser = async function(req,res){
             }
         }
 
-        //Validation for type String
+        //Check for type String
         let typeStringField = ["title","name","email","phone","password"]
         for(let key of typeStringField){
             if(!validation.isValidString(data[key])){
@@ -37,7 +37,7 @@ const createUser = async function(req,res){
             }
         }
 
-        /// validation for field that  CAN contains only letters
+        ///check for field that  CAN contains only letters
         let letField = ["name"]
         for(let key of letField){
             if(!validation.isLetters(data[key])){
@@ -78,7 +78,7 @@ const createUser = async function(req,res){
                 return
             }
 
-            // Check for valid key/field present in address obj
+            // Check for types of value to be String 
             let arr=["street","city","pincode"]
             for(let key in address){
                 if(!validation.isValidString(address[key])){
@@ -105,19 +105,20 @@ const createUser = async function(req,res){
 
         //==================DB CAlls=====================//
 
-         //// Check for unique Phone Number
-         const existedNumber = await userModel.findOne({phone})    /// Object ShortHand property
-         if(existedNumber){
-             res.status(400).send({status:false, msg:`${phone} number is already taken`})
-             return
-         }
-
-         /// Check for uniqueness of email
-        const existedEmail = await userModel.findOne({email})
-        if(existedEmail){
-            res.status(400).send({status:false, msg:`${email} email already taken`})
-            return
+         //// Check for uniqueness of phone and email
+         const user = await userModel.find({$or : [ {phone:phone} , {email:email} ] })    /// Object ShortHand property
+         for(let key of user){
+            // console.log(user,key)
+            if(key.phone==phone.trim()){
+                res.status(400).send({status:false,msg:`${phone} number is already taken`})
+                return 
+            }
+            if(key.email==email.trim().toLowerCase()){
+                res.status(400).send({status:false,msg:`${email} email is already taken`})
+                return
+            }
         }
+         
 
         // creating user document
         const newUser = await userModel.create(data)
@@ -144,7 +145,7 @@ const userLogin = async function(req,res){
             return
         }
 
-        // validation for mandatory fields
+        // Check for mandatory fields
         let mandField = ["email","password"]
         for(let key of mandField){
             if(!validation.isValid(requestBody[key])){
@@ -153,7 +154,7 @@ const userLogin = async function(req,res){
             }
         }
 
-        // Validation for values to be in String type only
+        // Check for values to be in String type only
         for(let key of mandField){
             if(!validation.isValidString(requestBody[key])){
                 res.status(400).send({status:false, msg:`${key} can't be empty / String only`})
@@ -175,7 +176,7 @@ const userLogin = async function(req,res){
         }
 
         // Creating token
-        const token = await jwt.sign(
+        const token = jwt.sign(
             {
                 userId:user._id
                

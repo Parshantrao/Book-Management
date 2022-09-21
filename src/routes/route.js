@@ -14,13 +14,13 @@ router.post("/register",userController.createUser)
 
 router.post("/login", userController.userLogin)
 
-router.post("/books",authMid.authorizationMid, bookController.createBook)
+router.post("/books", bookController.createBook)
 
 router.get("/books", bookController.getBookByParam)
 
 router.get("/books/:bookId", bookController.getBookById)
 
-router.put("/books/:bookId", authMid.authorizationMid, bookController.updateBook)
+router.put("/books/:bookId",  bookController.updateBook)
 
 router.delete("/books/:bookId", authMid.authorizationMid, bookController.deleteBook)
 

@@ -33,7 +33,24 @@
     
 // }
 // console.log(foo(6,[1,2,3]))
+// let moment=require("moment")
 
-let a=["Mr","Mrs","Miss"]
-console.log("   ".length)
+// // let data=
+// // console.log(new Date(20,10,20))
+// // releasedAt = moment(data,"YYYY-MM-DD")
+// // console.log(releasedAt.isValid(),)
+// let regex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+// let data=moment().format("YYYY-MM-DD")
+// let a=moment().add(3, 'months').format("YYYY-MM-DD")
+// let releasedAt="2022-09-22"
+      
+// // console.log(data)
+// console.log(a)
+
+
+var frequencySort = function(nums) {
+   nums.sort((a,b)=>a-b)
+   
+};
+console.log(frequencySort([1,1,2,2,2,3]))
 

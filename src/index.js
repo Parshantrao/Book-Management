@@ -8,7 +8,7 @@ const mongoose = require("mongoose")
 app.use(bodyParser.json())
 
 mongoose.connect(
-    "mongodb+srv://Parshant_rao:C4fIOvHGi74DVINv@newcluster.squkrr6.mongodb.net/InternGroup43",
+    "mongodb+srv://Parshant_rao:C4fIOvHGi74DVINv@newcluster.squkrr6.mongodb.net/BookManagement",
     {
         useNewUrlParser:true
     }

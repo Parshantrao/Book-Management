@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const {userController,bookController,reviewController}= require("../controllers")
-const {authMid, userMiddleware, bookMiddleware}=require("../middleware")
+const {authMid, userMiddleware, bookMiddleware, reviewMiddleware}=require("../middleware")
 
 
 router.get("/test", function(req,res){
@@ -24,9 +24,9 @@ router.put("/books/:bookId",bookMiddleware.updateBookMid,  bookController.update
 
 router.delete("/books/:bookId", bookController.deleteBook)
 
-router.post("/books/:bookId/review", reviewController.createReviewDoc)
+router.post("/books/:bookId/review",reviewMiddleware.createReviewDocMid, reviewController.createReviewDoc)
 
-router.put("/books/:bookId/review/:reviewId", reviewController.updateReviewDoc)
+router.put("/books/:bookId/review/:reviewId",reviewMiddleware.updateReviewDocMid, reviewController.updateReviewDoc)
 
 router.delete("/books/:bookId/review/:reviewId", reviewController.deleteReviewDoc)
 

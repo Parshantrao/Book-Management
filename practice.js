@@ -48,9 +48,12 @@
 // console.log(a)
 
 
-var frequencySort = function(nums) {
-   nums.sort((a,b)=>a-b)
+// var frequencySort = function(nums) {
+//    nums.sort((a,b)=>a-b)
    
-};
-console.log(frequencySort([1,1,2,2,2,3]))
+// };
+// console.log(frequencySort([1,1,2,2,2,3]))
+
+let regex=/^([1-5])$/
+console.log(regex.test(5))
 

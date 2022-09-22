@@ -12,8 +12,6 @@ const createBook = async function(req,res){
         // Extracting data from requestBody obj
         let {title,ISBN}=requestBody
 
-
-
         //=================== DB CALLs =================//
         
          //// Check for uniqueness of title and ISBN

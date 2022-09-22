@@ -1,3 +1,5 @@
 module.exports={
-    authMid:require("./authMid")
+    authMid:require("./authMid"),
+    bookMiddleware:require("./bookMiddleware"),
+    userMiddleware:require("./userMiddleware")
 }

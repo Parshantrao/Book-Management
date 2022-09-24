@@ -11,16 +11,13 @@ const createUser = async function(req,res){
         const data = req.body
 
         // Extracting values from requestBody
-        let {title,name,phone,email,password,address}=data
-
-        
+        let {phone,email}=data
 
         //==================DB CAlls=====================//
 
          //// Check for uniqueness of phone and email
          const user = await userModel.find({$or : [ {phone} , {email} ] })    /// Object ShortHand property
          for(let key of user){
-            // console.log(user,key)
             if(key.phone==phone.trim()){
                 res.status(400).send({status:false,msg:`${phone} number is already taken`})
                 return 
@@ -35,10 +32,10 @@ const createUser = async function(req,res){
         // creating user document
         const newUser = await userModel.create(data)
 
-        res.status(201).send({status:true , message:"Success", data:newUser})
+        return res.status(201).send({status:true , message:"Success", data:newUser})
     }
     catch(err){
-        res.status(500).send({statu:false, msg:err.message})
+        return res.status(500).send({statu:false, msg:err.message})
     }
 }
 
@@ -47,9 +44,6 @@ const createUser = async function(req,res){
 const userLogin = async function(req,res){
     try{
         let requestBody = req.body
-
-        // Extracting data from requestBody obj
-        let {email, password}=requestBody
 
         // validation for requestBody obj
         if(!validation.isValidObject(requestBody)){
@@ -68,14 +62,14 @@ const userLogin = async function(req,res){
 
         // Check for values to be in String type only
         for(let key of mandField){
-            if(!validation.isValidString(requestBody[key])){
+            if(typeof (requestBody[key]) != "string" || requestBody[key].trim().length==0){
                 res.status(400).send({status:false, msg:`${key} can't be empty / String only`})
                 return
             }
         } 
 
         // Validation for email
-        if(!validation.isValidEmail(email)){
+        if(!validation.isValidEmail(requestBody["email"])){
             res.status(400).send({status:false, msg:"Invalid email"})
             return
         }
@@ -99,11 +93,11 @@ const userLogin = async function(req,res){
             }
         )
 
-        res.status(201).send({status:true, message:"Success", data:{token:token}})
+        return res.status(201).send({status:true, message:"Success", data:{token:token}})
 
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 

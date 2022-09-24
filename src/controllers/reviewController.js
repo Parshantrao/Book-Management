@@ -5,15 +5,13 @@ const validation = require("../validators/validation");
 const createReviewDoc = async function (req, res) {
   try {
     const requestBody = req.requestBody;
-    const bookId = req.param.bookId;
+    const bookId = req.params.bookId;
 
     // creating reviews Document
     const newReview = await reviewModel.create(requestBody);
 
     // increasing review count in book document
-    const book = await bookModel
-      .findByIdAndUpdate(bookId, { $inc: { reviews: 1 } })
-      .lean();
+    const book = await bookModel.findOneAndUpdate({_id:bookId, isDeleted:false}, { $inc: { reviews: 1 } },{new:true}).lean();
     if (!book) {
       res.status(404).send({ status: false, msg: "no book found" });
       return;
@@ -21,9 +19,9 @@ const createReviewDoc = async function (req, res) {
 
     book.reviewer = newReview;
 
-    res.status(200).send({ status: true, message: "Success", data: book });
+    return res.status(201).send({ status: true, message: "Success", data: book });
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 
@@ -33,30 +31,27 @@ const createReviewDoc = async function (req, res) {
 const updateReviewDoc = async function (req, res) {
   try {
     const requestBody = req.body;
-    const bookId = req.param.bookId;
-    const reviewId = req.param.reviewId;
+    const bookId = req.params.bookId;
+    const reviewId = req.params.reviewId;
 
     // Update reviewDoc
-    const updatedReviewDoc = await reviewModel.findByIdAndUpdate(
-      reviewId,
-      requestBody,
-      { new: true }
-    );
-    if (!updateReviewDoc) {
+    const updatedReviewDoc = await reviewModel.findOneAndUpdate({_id:reviewId, isDeleted:false},requestBody,{new:true})
+    if (!updatedReviewDoc) {
       res.status(404).send({ status: false, msg: "no review found" });
       return;
     }
 
-    const book = await bookModel.findById(bookId).lean();
+    const book = await bookModel.findOne({_id:bookId, isDeleted:false}).lean();
+    console.log(book)
     if (!book) {
       res.status(404).send({ status: false, msg: "no book found" });
       return;
     }
     book.reviewer = updatedReviewDoc;
 
-    res.status(200).send({ status: true, message: "Success", data: book });
+    return res.status(200).send({ status: true, message: "Success", data: book });
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 
@@ -65,8 +60,8 @@ const updateReviewDoc = async function (req, res) {
 
 const deleteReviewDoc = async function (req, res) {
   try {
-    const bookId = req.param.bookId;
-    const reviewId = req.param.reviewId;
+    const bookId = req.params.bookId;
+    const reviewId = req.params.reviewId;
 
     // validation for bookId and reviewId
     if (!validation.isValidObjectId(bookId)) {
@@ -98,9 +93,9 @@ const deleteReviewDoc = async function (req, res) {
       return;
     }
 
-    res.status(200).send({ status: true, message: "successfully deleted" });
+    return res.status(200).send({ status: true, message: "successfully deleted" });
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 

@@ -1,4 +1,3 @@
-const {userModel,bookModel,reviewModel}=require("../models")
 const validation = require("../validators/validation")
 const moment = require("moment")
 
@@ -7,12 +6,12 @@ const moment = require("moment")
 
 const createBookMid = async function(req,res,next){
     try{
-        const requestBody = req.body 
+        // const requestBody = req.body 
 
         // Extracting data from requestBody obj
-        let {title,excerpt,userId,ISBN,category,subcategory,releasedAt}=requestBody
+        let {title,excerpt,userId,ISBN,category,subcategory,releasedAt}=req.body
 
-        if(!validation.isValidObject(requestBody)){
+        if(!validation.isValidObject(req.body)){
             res.status(400).send({status:false, msg:"pls provide book details"})
             return
         }
@@ -20,17 +19,8 @@ const createBookMid = async function(req,res,next){
         // Check on Field which are mandatory
         let mandField=["title","excerpt","userId","ISBN","category","subcategory"]
         for(let key of mandField){
-            if(!validation.isValid(requestBody[key])){
+            if(!validation.isValid(req.body[key])){
                 res.status(400).send({status:false, msg:`${key} is required`})
-                return
-            }
-        }
-
-        // Validation on fields whose type is String
-        let typeStringField = ["title","excerpt","ISBN","category","subcategory"]
-        for(let key of typeStringField){
-            if(!validation.isValidString(requestBody[key])){
-                res.status(400).send({status:false, msg:`${key} can't be empty / String only`})
                 return
             }
         }
@@ -38,8 +28,8 @@ const createBookMid = async function(req,res,next){
         // Validation on field that contains only letters in their values'
         let arr=["title","excerpt","category","subcategory"]
         for(let key of arr){
-            if(!validation.isLetters(requestBody[key])){
-                res.status(400).send({status:false, msg:`${key} only contains letter`})
+            if(!validation.isValidName(req.body[key])){
+                res.status(400).send({status:false, msg:`${key} can only contains letter/ String type`})
                 return
             }
         }
@@ -67,21 +57,22 @@ const createBookMid = async function(req,res,next){
             }
         }
         if(!releasedAt){
-            requestBody.releasedAt=moment().add(3, 'months').format("YYYY-MM-DD")
+            req.body.releasedAt=moment().add(3, 'months').format("YYYY-MM-DD")
         }
-        req.requestBody=requestBody
+
+        req.requestBody=req.body
         next()
 
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
 
 const getBookMid = async function(req,res,next){
     try{
-        const queryParams = req.query
+        // const queryParams = req.query
         
         // Check if queryParams are given or not
         if(Object.keys(req.query).length==0){
@@ -91,7 +82,7 @@ const getBookMid = async function(req,res,next){
 
         // Check for valid queryParams
         let queryParamsArray=["userId","category","subcategory"]
-        for(let key in queryParams){
+        for(let key in req.query){
             if(!queryParamsArray.includes(key)){
                 res.status(400).send({status:false, msg:`queryParams can only be- ${queryParamsArray.join(",")}`})
                 return
@@ -99,28 +90,28 @@ const getBookMid = async function(req,res,next){
         }
 
         // Check for values of queryParams
-        for(let key in queryParams){
-            if(queryParams[key].length==0){
+        for(let key in req.query){
+            if(req.query[key].length==0){
                 res.status(400).send({status:false, msg:`${key} can't be empty`})
                 return
             }
         }
                
         // adding isdeleted key in queryParam obj
-        queryParams.isDeleted = false
+        req.query.isDeleted = false
 
-        req.queryParams=queryParams
+        req.queryParams=req.query
 
         next()
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
 const updateBookMid = async function(req,res,next){
     try{
-        const bookId = req.params.bookId
+        // const bookId = req.params.bookId
         const requestBody = req.body
 
         // Validation on requestBody obj
@@ -131,17 +122,11 @@ const updateBookMid = async function(req,res,next){
 
         let arr=["title","excerpt","category","subcategory"]
 
-        // Validation on fields whose type is String
+        // Validating those fields that can contain only letters
         for( let key in requestBody ){
-            if( !validation.isValidString( requestBody[key] )  ){
-                res.status( 400 ).send( {status:false, msg:`${key} can't be empty / String only`} )
+            if( arr.includes(key) && !validation.isValidName( requestBody[key] )  ){
+                res.status( 400 ).send( {status:false, msg:`${key} contains only letters / String only`} )
                 return
-            }
-            if(arr.includes(key)){
-                if( !validation.isLetters( requestBody[key] ) ){
-                    res.status( 400 ).send( {status:false, msg:`${key} can only contains letters`} )
-                    return
-                }
             }
         }
 
@@ -168,7 +153,7 @@ const updateBookMid = async function(req,res,next){
 
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 

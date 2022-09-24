@@ -54,6 +54,19 @@
 // };
 // console.log(frequencySort([1,1,2,2,2,3]))
 
-let regex=/^([1-5])$/
-console.log(regex.test(5))
+// let regex=/^([1-5])$/
+// console.log(regex.test(1))
 
+// let a = null
+// // b 
+// console.log(typeof b,a)
+
+// foo()
+//  console.log(a);
+// let a = "a"
+
+// function foo(data){
+//     console.log("running")
+// }
+//  foo()
+ console.log(true || false);

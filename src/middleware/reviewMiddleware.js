@@ -3,14 +3,14 @@ const moment = require("moment");
 
 const createReviewDocMid = async function (req, res, next) {
   try {
-    const requestBody = req.body;
-    const bookId = req.param.bookId;
+    // const requestBody = req.body;
+    const bookId = req.params.bookId;
 
     //Extracting values from requestBody obj
-    let { reviewedBy, rating, review, reviewedAt } = requestBody;
+    let { reviewedBy, rating, review, reviewedAt } = req.body;
 
     // Validation on requestBody obj
-    if (!validation.isValidObject(requestBody)) {
+    if (!validation.isValidObject(req.body)) {
       res
         .status(400)
         .send({ status: false, msg: "pls provide review details" });
@@ -26,8 +26,7 @@ const createReviewDocMid = async function (req, res, next) {
     // validation on reviewedBy
     if (reviewedBy) {
       if (
-        !validation.isValidString(reviewedBy) ||
-        !validation.isLetters(reviewedBy)
+        !validation.isValidName(reviewedBy)
       ) {
         res
           .status(400)
@@ -40,24 +39,19 @@ const createReviewDocMid = async function (req, res, next) {
     }
 
     // validation on rating
-    if (!rating) {
+    if (!validation.isValid(rating)) {
       res.status(400).send({ status: false, msg: "pls provide rating" });
       return;
     }
-    if (!validation.isValidNumber(rating)) {
-      res.status(400).send({ status: false, msg: "rating type is Number" });
+    if (!validation.isValidRating(rating)) {
+      res.status(400).send({ status: false, msg: "rating must be a number and  in between 1 to 5" });
       return;
     }
-    if (!/^([1-5])$/.test(rating)) {
-      res
-        .status(400)
-        .send({ status: false, msg: "rating must be in between 1 to 5" });
-      return;
-    }
+   
 
     // validation on review
     if (review) {
-      if (!validation.isValidString(review) || !validation.isLetters(review)) {
+      if (!validation.isValidName(review) ) {
         res
           .status(400)
           .send({
@@ -68,14 +62,15 @@ const createReviewDocMid = async function (req, res, next) {
       }
     }
 
-    requestBody.reviewedAt = moment().format("YYYY-MM-DD");
+    req.body.reviewedAt = moment().format("YYYY-MM-DD");
 
     // adding bookId in requesBody
-    requestBody.bookId = bookId;
-    req.requestBody = requestBody;
+    req.body.bookId = bookId;
+
+    req.requestBody = req.body;
     next();
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 
@@ -84,15 +79,15 @@ const createReviewDocMid = async function (req, res, next) {
 
 const updateReviewDocMid = async function (req, res, next) {
   try {
-    const requestBody = req.body;
-    const bookId = req.param.bookId;
-    const reviewId = req.param.reviewId;
+    // const requestBody = req.body;
+    const bookId = req.params.bookId;
+    const reviewId = req.params.reviewId;
 
     //Extracting values from requestBody obj
-    let { reviewedBy, rating, review, reviewedAt } = requestBody;
+    let { reviewedBy, rating, review } = req.body;
 
     // validation for requestbody obj
-    if (!validation.isValidObject(requestBody)) {
+    if (!validation.isValidObject(req.body)) {
       res
         .status(400)
         .send({ status: false, msg: "pls provide data to update" });
@@ -112,8 +107,7 @@ const updateReviewDocMid = async function (req, res, next) {
     // vaidation on reviewedBy
     if (reviewedBy) {
       if (
-        !validation.isValidString(reviewedBy) ||
-        !validation.isLetters(reviewedBy)
+        !validation.isValidName(reviewedBy) 
       ) {
         res
           .status(400)
@@ -127,21 +121,15 @@ const updateReviewDocMid = async function (req, res, next) {
 
     // validation on rating
     if (rating) {
-      if (!validation.isValidNumber(rating)) {
-        res.status(400).send({ status: false, msg: "rating type is Number" });
-        return;
-      }
-      if (!/^([1-5])$/.test(rating)) {
-        res
-          .status(400)
-          .send({ status: false, msg: "rating must be in between 1 to 5" });
+      if (!validation.isValidRating(rating)) {
+        res.status(400).send({ status: false, msg: "rating must be a number and  in between 1 to 5" });
         return;
       }
     }
 
     // validation on review
     if (review) {
-      if (!validate.isValidString(review) || !validation.isLetters(review)) {
+      if (!validation.isValidName(review) ) {
         res
           .status(400)
           .send({
@@ -153,7 +141,7 @@ const updateReviewDocMid = async function (req, res, next) {
     }
     next();
   } catch (err) {
-    res.status(500).send({ status: false, msg: err.message });
+    return res.status(500).send({ status: false, msg: err.message });
   }
 };
 

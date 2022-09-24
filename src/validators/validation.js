@@ -2,16 +2,39 @@ const mongoose=require("mongoose")
 
 const isValidEmail = function(data){
     let emailRegex=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    return emailRegex.test(data.trim())
+    if(typeof data =="string" && data.trim().length !==0 && emailRegex.test(data.trim())) return true
+    return false
 }
 
 const isValidPassword = function(data){
     let passRegex=/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,15})/
-    return passRegex.test(data.trim())
+    if(typeof data =="string" && data.trim().length !==0 && passRegex.test(data.trim())) return true
+    return false
 }
+
+const isValidPhone=(data)=>{
+    let phoneRegex=/^[6-9]\d{9}$/
+    if(typeof data =="string" && data.trim().length !==0 && phoneRegex.test(data.trim())) return true
+    return false
+}
+
+const isValidTitle=(data)=>
+{
+    let arr=["Mr","Mrs","Miss"]
+    if (typeof data == "string" && data.trim().length !== 0 && arr.includes(data.trim())) return true
+    return false
+}
+
+const isValidISBN = (data)=>{
+    let ISBNregex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+    if(typeof data =="string" && data.trim().length !==0 && ISBNregex.test(data.trim())) return true
+    return false
+}
+
+
 const isValidObject = function(data){
-    if(Object.prototype.toString.call(data)!="[object Object]" || Object.keys(data).length==0) return false
-    return true
+    if(Object.prototype.toString.call(data)=="[object Object]" && Object.keys(data).length!=0) return true
+    return false
 }
 
 const isValid = function(data){
@@ -19,58 +42,38 @@ const isValid = function(data){
     return true  
 }
 
-const isValidString = function(data){
-    if(Object.prototype.toString.call(data)!="[object String]" || data.trim().length==0) return false
-    return true
+
+const isValidRating = function(data){
+    if(Object.prototype.toString.call(data)=="[object Number]" && data>=1 && data<=5) return true
+    return false
 }
 
-const isValidNumber = function(data){
-    if(Object.prototype.toString.call(data)!="[object Number]" || data.length==0) return false
-    return true
-}
-
-const isValidPhone=(data)=>{
-    let phoneRegex=/^[6-9]\d{9}$/
-    return phoneRegex.test(data.trim())
-}
-
-const isLetters = (data)=>{
-    let letRegex=/^[a-zA-Z]+$/
-    return letRegex.test(data.trim())
-}
-
-const isValidTitle=(data)=>
-{
-    let arr=["Mr","Mrs","Miss"]
-    if(!arr.includes(data.trim())) return false
-    return true  
-}
-
-const isValidISBN = (data)=>{
-    let ISBNregex=/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
-    return ISBNregex.test(data.trim())
+const isValidName = function(data){
+    if(Object.prototype.toString.call(data)=="[object String]" && data.trim().length!=0 && /^[a-zA-Z]+$/.test(data.trim()) ) return true
+    return false
 }
 
 const isValidObjectId = (data)=>{
     return mongoose.Types.ObjectId.isValid(data)
 }
 
-const makeArray = (data)=>{
-    let arr=data.toLowerCase().split(",").map(x=>x.trim()).filter(x=>x.length>0)
-    return arr
+const isValidPincode=(data)=>{
+    let pincodeRegex=/^[1-9][0-9]{5}$/
+    if(typeof data =="string" && data.trim().length !==0 && pincodeRegex.test(data.trim())) return true
+    return false
 }
+
 
 module.exports={
     isValid,
-    isValidString,
-    isValidNumber,
+    isValidName,
+    isValidRating,
     isValidObject,
     isValidPassword,
     isValidEmail,
     isValidPhone,
     isValidTitle,
-    isLetters,
     isValidObjectId,
-    makeArray,
+    isValidPincode,
     isValidISBN
 }

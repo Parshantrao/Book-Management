@@ -31,11 +31,11 @@ const createBook = async function(req,res){
         // creating book document
         const newBook = await bookModel.create(requestBody)
 
-        res.status(201).send({status:false, message:"Success", data:newBook})
+        return res.status(201).send({status:false, message:"Success", data:newBook})
 
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
@@ -54,10 +54,10 @@ const getBookByParam = async function(req,res){
             return
         }
 
-        res.status(200).send({status:true, message:"Success", data:books})
+        return res.status(200).send({status:true, message:"Success", data:books})
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
@@ -83,10 +83,10 @@ const getBookById = async function(req,res){
         
         bookDetails.reviewsData=reviewDetails
 
-        res.status(200).send({status:true, message:"Books list", data:bookDetails})
+        return res.status(200).send({status:true, message:"Books list", data:bookDetails})
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
@@ -125,10 +125,10 @@ const updateBook = async function(req,res){
             return
         }
         
-        res.status(200).send({status:true, message:"Success", data:updateBook})
+        return res.status(200).send({status:true, message:"Success", data:updateBook})
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 
@@ -152,17 +152,12 @@ const deleteBook = async function(req,res){
         }
 
         const deleteBook = await bookModel.findByIdAndUpdate(bookId,{isDeleted:true, deletedAt:moment().format("YYYY-MM-DD")})
-       
-        console.log(deleteBook)
 
-       
-
-        res.status(200).send({status:true, msg:"Successfully deleted"})
-
+        return res.status(200).send({status:true, msg:"Successfully deleted"})
 
     }
     catch(err){
-        res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err.message})
     }
 }
 

@@ -5,13 +5,13 @@ const validation = require("../validators/validation")
 
 const createUserMid = async function(req,res,next){
     try{
-        const data = req.body
+        const requestBody = req.body
 
         // Extracting values from requestBody
-        let {title,name,phone,email,password,address}=data
+        let {title,name,phone,email,password,address}=requestBody
 
         // Validation on requestBody
-        if(!validation.isValidObject(data)){
+        if(!validation.isValidObject(requestBody)){
             res.status(400).send({status:false, msg:"pls provide user details"})
             return
         }
@@ -19,33 +19,21 @@ const createUserMid = async function(req,res,next){
         //Check for mandatory fields
         let arrOfMandField = ["title","name","phone","email","password"]
         for(let key of arrOfMandField){
-            if(!Object.keys(data).includes(key)){
+            if(!Object.keys(requestBody).includes(key)){
                 res.status(400).send({status:false, msg:`${key} must be present`})
-                return
-            }
-        }
-
-        //Check for type String
-        let typeStringField = ["title","name","email","phone","password"]
-        for(let key of typeStringField){
-            if(!validation.isValidString(data[key])){
-                res.status(400).send({status:false,msg:`${key} can't be empty / String only`})
-                return
-            }
-        }
-
-        ///check for field that  CAN contains only letters
-        let letField = ["name"]
-        for(let key of letField){
-            if(!validation.isLetters(data[key])){
-                res.status(400).send({status:false,msg:`${key} must contain letters only`})
                 return
             }
         }
 
         //1.validation on title
         if(!validation.isValidTitle(title)){
-            res.status(400).send({status:false, msg:"title must be from - Mr, Mrs, Miss"})
+            res.status(400).send({status:false, msg:"title must be from - Mr, Mrs, Miss in string"})
+            return
+        }
+
+        //2. validation on userName
+        if(!validation.isValidName(name)){
+            res.status(400).send({status:false, msg:"Name must contain letter only (string type)"})
             return
         }
 
@@ -62,7 +50,6 @@ const createUserMid = async function(req,res,next){
         }
 
         //5. Validation on password
-
         if(!validation.isValidPassword(password)){
             res.status(400).send({status:false, msg:"password must contain uppercase,lowercase,number,special charactor"})
             return
@@ -75,25 +62,31 @@ const createUserMid = async function(req,res,next){
                 return
             }
 
-            // Check for types of value to be String 
-            let arr=["street","city","pincode"]
-            for(let key in address){
-                if(!validation.isValidString(address[key])){
-                    res.status(400).send({status:false, msg:`${key} can't be empty / String only`})
-                    return
-                }
-            }
+            // for(let key in address){
+            //     if(address[key].length==0){
+            //         res.status(400).send({status:false, message:`${key} can't be empty`})
+            //         return
+            //     }
+            // }
 
-            // Check for city to have only letters in value
-            if(address["city"]){
-                if(!validation.isLetters(address["city"])){
+            // Validating city
+            if(validation.isValid(address["city"])){
+                if(!validation.isValidName(address["city"])){
                     res.status(400).send({status:false, msg:"city must contains letters only"})
                     return
                 }
             }
-            if(address["pincode"]){
-                if(!/^[1-9][0-9]{5}$/.test(address["pincode"])){
+            // Validating pincode
+            if(validation.isValid(address["pincode"])){
+                if(!validation.isValidPincode(address["pincode"])){
                     res.status(400).send({status:false, msg:"invalid pincode"})
+                    return
+                }
+            }
+            // Validating street
+            if(validation.isValid(address["street"])){
+                if(typeof address["street"] != "string" || address["street"].length==0){
+                    res.status(400).send({status:false, message:"street can't be empty"})
                     return
                 }
             }
@@ -103,7 +96,7 @@ const createUserMid = async function(req,res,next){
          
     }
     catch(err){
-        res.status(500).send({statu:false, msg:err.message})
+        return res.status(500).send({statu:false, msg:err.message})
     }
 }
 

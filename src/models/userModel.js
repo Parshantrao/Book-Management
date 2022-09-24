@@ -16,8 +16,8 @@ const userSchema = mongoose.Schema({
 
     phone:{type:String, required:true, unique:true, trim:true, 
         validate:validattion.isValidPhone,
-        message:"phone number must be indian phone number (without +91)",
-        isAsync:false,
+        message:"phone number must be indian phone number (without +91)"
+        // isAsync:false,
     },
 
     email:{
@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema({
         validate:{
             validator:validattion.isValidEmail,
             message:"Invalid email",
-            isAsync:false,
+            
         }
     },//// Validation
 
@@ -38,8 +38,8 @@ const userSchema = mongoose.Schema({
             let passRegex=/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,15})/
             return passRegex.test(v)
             },
-            message:"Invalid password",
-            isAsync:false,
+            message:"Invalid password"
+            
         }
     },
 

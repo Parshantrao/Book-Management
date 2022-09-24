@@ -47,17 +47,16 @@ const createBookMid = async function(req,res,next){
         }
         
         // Check for releasedAt 
-        if(releasedAt){
-            if(!moment(releasedAt,"YYYY-MM-DD",true).isValid()){
-               return res.status(400).send({status:false, msg:"releasedAt should be in YYYY-MM-DD format"})
-            }
-            let date=moment().format("YYYY-MM-DD")
-            if(!moment(releasedAt).isAfter(date)){
-                return res.status(400).send({status:false, msg:"pls provide an upcoming date"})
-            }
+        if (!releasedAt) {
+            return res.status(400).send({ status: false, message: "releasedAt is mandatory" })
         }
-        if(!releasedAt){
-            req.body.releasedAt=moment().add(3, 'months').format("YYYY-MM-DD")
+        
+        if (!moment(releasedAt, "YYYY-MM-DD", true).isValid()) {
+            return res.status(400).send({ status: false, msg: "releasedAt should be in YYYY-MM-DD format" })
+        }
+        let date = moment().format("YYYY-MM-DD")
+        if (!moment(releasedAt).isAfter(date)) {
+            return res.status(400).send({ status: false, msg: "pls provide an upcoming date" })
         }
 
         req.requestBody=req.body
@@ -74,11 +73,6 @@ const getBookMid = async function(req,res,next){
     try{
         // const queryParams = req.query
         
-        // Check if queryParams are given or not
-        if(Object.keys(req.query).length==0){
-            res.status(400).send({status:false, msg:"pls provide QueryParams"})
-            return
-        }
 
         // Check for valid queryParams
         let queryParamsArray=["userId","category","subcategory"]

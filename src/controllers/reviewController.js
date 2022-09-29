@@ -1,6 +1,6 @@
 const { userModel, bookModel, reviewModel } = require("../models");
 const jwt = require("jsonwebtoken");
-const validation = require("../validators/validation");
+const validation = require("../utils/validation");
 
 const createReviewDoc = async function (req, res) {
   try {

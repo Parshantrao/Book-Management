@@ -1,4 +1,4 @@
-const validation = require("../validators/validation");
+const validation = require("../utils/validation");
 const moment = require("moment");
 
 const createReviewDocMid = async function (req, res, next) {

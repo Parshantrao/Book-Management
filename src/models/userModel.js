@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const validattion = require("../validators/validation")
+const validattion = require("../utils/validation")
 
 
 

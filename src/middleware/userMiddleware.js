@@ -1,4 +1,4 @@
-const validation = require("../validators/validation")
+const validation = require("../utils/validation")
 
 
 

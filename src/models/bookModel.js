@@ -10,6 +10,8 @@ const bookSchema = mongoose.Schema({
 
     userId:{type:ObjectId, require:true, ref:"User"},
 
+    bookCover:{type:String, require:true},
+
     ISBN:{type:String, require:true, unique:true, trim:true, lowercase:true},
 
     category:{type:String, require:true, trim:true, lowercase:true},

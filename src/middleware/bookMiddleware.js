@@ -1,4 +1,4 @@
-const validation = require("../validators/validation")
+const validation = require("../utils/validation")
 const moment = require("moment")
 
 
@@ -59,7 +59,6 @@ const createBookMid = async function(req,res,next){
             return res.status(400).send({ status: false, msg: "pls provide an upcoming date" })
         }
 
-        req.requestBody=req.body
         next()
 
     }

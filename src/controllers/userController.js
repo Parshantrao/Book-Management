@@ -1,5 +1,5 @@
 const {userModel,bookModel,reviewModel}=require("../models")
-const validation = require("../validators/validation")
+const validation = require("../utils/validation")
 const jwt = require("jsonwebtoken")
 const secreteKey = "functionupPlutonium((@)))(%$#)()))(*&"
 

@@ -1,5 +1,5 @@
 const {userModel,bookModel,reviewModel}=require("../models")
-const validation = require("../validators/validation")
+const {validation,aws} = require("../utils")
 const moment = require("moment")
 
 
@@ -7,7 +7,7 @@ const moment = require("moment")
 
 const createBook = async function(req,res){
     try{
-        const requestBody = req.requestBody 
+        const requestBody = req.body
 
         // Extracting data from requestBody obj
         let {title,ISBN}=requestBody
@@ -27,6 +27,16 @@ const createBook = async function(req,res){
             }
         }
 
+        // uploading file
+        const files= req.files
+        
+        if(files && files.length>0){
+            const url = await aws.uploadFile(files[0])
+            requestBody.bookCover = url
+        }
+        else{
+            return res.status(400).send({status:false, message:"no file found"})
+        }
 
         // creating book document
         const newBook = await bookModel.create(requestBody)
@@ -35,7 +45,7 @@ const createBook = async function(req,res){
 
     }
     catch(err){
-        return res.status(500).send({status:false, msg:err.message})
+        return res.status(500).send({status:false, msg:err})
     }
 }
 
